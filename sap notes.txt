@@ -1,0 +1,252 @@
+09-10-
+
+------------------------
+
+ERP- ENTERPRISE RESOURCE PLANNING
+
+Standard SAP
+
+
+
+P.L.+A.L.+D.B.= 3tier archi.
+
+
+
+10-10-
+
+------------------------
+
+backgorund process
+
+dialog work process- handle any requ coming from the screen
+
+update- handle db update req
+
+user context- User context is the situation of a user at a given time, including various factors that can influence their exp and behaviour.
+
+ICM- Internet comminication management 
+
+
+
+standard screen---
+
+Menu bar
+
+title bar
+
+status bar
+
+
+
+ABAP painter
+
+data dictionary
+
+
+
+prgm name should start with z or y in customer.
+
+
+
+repository objects
+
+f1+help, f4+help- shows possible entries for that field
+
+
+
+cntl+y--text cursor
+
+
+
+two states--active and passive
+
+
+
+begins with keyword, end with period.
+
+there must be space btwn words.
+
+not case sensitive.
+
+operands and additions aprt from keyword.
+
+
+
+comment-" ", cntrl+< -comment ,cntrl+> -uncomment
+
+
+
+data type- technical attri. to a data object. 
+
+data object-- physical, creates memory
+
+
+
+data- to define a data object
+
+		DATA v_name TYPE c      (c- character)
+
+				types- predefied and user defined
+
+	packed number (p)- number with decimal point 
+
+:/   --new line
+
+
+
+stores data to make it locally avaible for abap.
+
+
+
+internal format and external format of date.
+
+
+
+keywords--
+
+data object- need to store data
+
+data- defines data object
+
+type- defines data type local
+
+data elements- global user defined types
+
+
+
+se11- global settings of data
+
+se80--package
+
+se38--editor
+
+se91--message class
+
+
+
+ma ra- material master table, shows all the fields in that table
+
+
+
+11-10-
+
+----------------------
+
+elementary data types (predefibed data type) - to define global
+
+
+
+to define data object you can refer it to predefined data type or user defi or data element. if we have more than one data object of same type go with user defi. if we use same data in diff progrms, data element.
+
+recommends to refer your data objects to data elemnts.
+
+
+
+parameters keyword defines an input screen,creating memory, linking input and memory, called 
+
+1.selection screen. 
+
+2.list screen- wrire keyword, shows ouput
+
+3.screen- manually created
+
+
+
+data objects
+
+1.variables- can store diff data, data keyword defines a variable.
+
+3.constants- defined using constant keyword, have one value thrpughout the programs, mandatory provide an initial value, inital value cannot be changed,
+
+3.literals- unnamed data objetcs, its memory does not have name, cannot resuse them.
+
+	i.character literal- in single quote
+
+	ii.numeric literal- numbers 
+
+
+
+data forms-----
+
+1.field- 
+
+2.row- structure
+
+3.multiple rows- table
+
+
+
+SELECT SINGLE- select only a single row
+
+SELECT ENDSELECT- loops to show multiple rows
+
+
+
+purchase orders---
+
+/nme21- create
+
+/nme22- change
+
+/nme23- displaye
+
+/nse11- refresh
+
+
+
+sales order----
+
+VA01-create
+
+VA02-edit
+
+VA03-display
+
+
+
+header table- ekko
+
+item tbl- ekpo
+
+
+
+13-10-----------------------------------
+
+index- locates which row has which data 
+
+sy-langu--language
+
+sy-ucit--time
+
+
+
+to store multiple rows of data- internal tbl
+
+
+
+to store data to internal tble - READ-any 1 row
+
+											-LOOP- more than 1 row
+
+index access- read by row
+
+key access- 
+
+
+
+append or insert or collect to add data to tbl manually.
+
+work area is  a structure with same area
+
+
+
+refering data object to a data type- type
+
+			data obj to other data obj- like
+
+
+
+select- to read data from database
+
+read- to read data from internal tbl
+
