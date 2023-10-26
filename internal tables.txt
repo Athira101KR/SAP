@@ -1,0 +1,47 @@
+Standard Table Declaration
+-------------------
+TYPES:
+
+begin of LineType,
+F1,f2,
+End of LineType.
+
+DATA:
+
+itab TYPE SORTED TABLE OF
+LineType WITH {NON- UNIQUE|UNIQUE} KEY f1
+With header line.
+
+---------------------------------------------------
+
+Sorted Table Declaration
+--------------------
+TYPES:
+
+begin of LineType,
+F1,f2,
+End of LineType.
+
+DATA:
+
+itab TYPE SORTED TABLE OF
+LineType WITH {NON- UNIQUE|UNIQUE} KEY f1
+With header line.
+
+-----------------------------------------------------
+
+Hashed Table Declaration
+--------------------
+TYPES:
+
+begin of LineType,
+F1,f2,
+End of LineType.
+
+DATA:
+
+itab TYPE HASHED TABLE OF
+LineType WITH UNIQUE KEY f1 Initial size 100
+With header line.
+
+
