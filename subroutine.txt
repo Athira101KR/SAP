@@ -1,0 +1,54 @@
+
+REPORT ZABAP_ATHIRA_TASK4_FIRST_25OCT.
+
+DATA: lv_data TYPE string.
+
+START-OF-SELECTION.
+  lv_data = 'Sample Data'.
+  PERFORM perform_sub IN PROGRAM ('ZABAP_ATHIRA_TASK4_SUBS').
+
+WRITE: / 'Data from Program 2:', lv_data.
+
+-------------------------------------
+
+FUNCTION-POOL ZABAP_ATHIRA_TASK4_SUBS.
+
+FORM perform_sub.
+  DATA: lv_data_sub TYPE string.
+  lv_data_sub = 'Sample Data from Program 2'.
+  WRITE: / lv_data_sub.
+ENDFORM.
+
+--------------------------------***********************-----------------------------
+
+REPORT ZABAP_ATHIRA_TASK4_FIRST_25OCT.
+*
+DATA: lv_data TYPE string.
+
+START-OF-SELECTION.
+  lv_data = 'Sample Data'.
+  PERFORM perform_sub IN PROGRAM ('ZABAP_ATHIRA_TASK4_2_25OCT') USING '1'.
+  WRITE: / 'Data from Program 1:', lv_data.
+
+-----------------------------
+
+FUNCTION-POOL ZABAP_ATHIRA_TASK4_2_25OCT.
+
+FORM perform_sub USING p_deptid TYPE ZATHIRA_MAKT-dept_id.
+
+  TYPES: BEGIN OF ty_mkt,
+           name TYPE ZATHIRA_MAKT-name,
+    p_deptid TYPE ZATHIRA_MAKT-dept_id,
+         END OF ty_mkt.
+
+  DATA: st_makt TYPE ty_mkt.
+  p_deptid = '1'.
+
+  SELECT name FROM ZATHIRA_MAKT INTO st_makt WHERE dept_id EQ p_deptid.
+
+  WRITE: / st_makt-name.
+
+  ENDSELECT.
+
+ENDFORM.
+
