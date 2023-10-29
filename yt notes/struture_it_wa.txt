@@ -1,0 +1,6 @@
+Structure--->
+	can store properties of multiple fields but cannot store the data.
+Internal tables---> 
+	can store data as well as properties.
+Work area--> 
+	can store data but single row at a time.

@@ -1,0 +1,51 @@
+SORTED TABLE
+	-----------------------------------
+
+Sorted Order: 
+	Data in a Sorted Table is kept in ascending order based on the key 
+	field(s). When you insert or modify entries, the system ensures that the
+	 table remains sorted. This makes searching for specific entries very 
+	efficient, as you can use binary search algorithms.
+
+Key Field: 
+	To define a Sorted Table, you must specify the key field(s) by which
+ 	the sorting will be done. You can define a unique or non-unique key,
+	 which affects whether duplicate keys are allowed.
+
+Efficient for Read Operations: 
+	Sorted Tables are particularly efficient when you need to read data 
+	based on the key field(s) because they enable fast binary searches. 
+	This makes them suitable for scenarios where data retrieval is a 
+	common operation.
+
+Insertion and Modification: 
+	Adding or modifying entries in a Sorted Table can be slightly slower 
+	compared to standard tables, as the system needs to maintain the 
+	sorting order. However, for read-heavy use cases, the benefits of fast 
+	retrieval can outweigh this.
+
+
+
+HASHED TABLE
+	----------------------------------------------------------------
+Hash Key:
+	 In a Hashed Table, each entry is accessed using a unique hash key, 
+	which is a calculated value based on the key field(s) you specify. 
+	The hash key should be unique for each entry.
+Fast Data Retrieval: 
+	Hashed Tables offer very fast data retrieval for entries based on their
+	 key field. The system calculates the hash key and directly accesses 
+	the relevant entry, making it an O(1) operation, assuming a 
+	well-distributed hash function.
+
+Hash Collisions: 
+	Hash collisions occur when two or more entries produce the same hash
+	 key. ABAP automatically resolves these collisions by placing 
+	colliding entries in an internal linear table within the Hashed Table. 
+	This internal linear table is searched linearly when resolving collisions,
+	 so it's less efficient for collisions but still faster than a full table scan.
+
+Insertion and Modification: 
+	Inserting and modifying entries in Hashed Tables is generally very
+	 efficient as long as hash collisions are minimized. Designing a good 
+	hash key and minimizing collisions is critical for performance.

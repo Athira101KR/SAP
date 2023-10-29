@@ -1,0 +1,32 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_AR_3
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zabap_ar_3.
+
+TYPES: BEGIN OF ty_vbak,
+         vbeln TYPE vbak-vbeln,
+         audat TYPE vbak-audat,
+         netwr TYPE vbak-netwr,
+         kunnr TYPE vbak-kunnr,
+       END OF ty_vbak.
+
+DATA: it_vbak TYPE STANDARD TABLE OF ty_vbak,
+      wa_vbak LIKE LINE OF it_vbak.
+
+SELECT-OPTIONS s_num FOR wa_vbak-vbeln.
+
+SELECT vbeln audat netwr kunnr FROM vbak INTO TABLE it_vbak WHERE vbeln IN s_num .
+
+WRITE: /20 'Document Number',
+        40 'Doc Date',
+        60 'Net Val',
+        90 'Kunnr val'.
+
+  LOOP AT it_vbak INTO wa_vbak.
+    WRITE :/20 wa_vbak-vbeln,
+           40 wa_vbak-audat,
+           60 wa_vbak-netwr,
+          90  wa_vbak-kunnr.
+  ENDLOOP.

@@ -1,0 +1,43 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_AR_4
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZABAP_AR_4.
+
+TYPES: BEGIN OF ty_vbak,
+         vbeln TYPE vbak-vbeln,
+         audat TYPE vbak-audat,
+         netwr TYPE vbak-netwr,
+         kunnr TYPE vbak-kunnr,
+       END OF ty_vbak.
+
+TYPES: BEGIN OF ty_kna1,
+  kunnr TYPE kna1-kunnr,
+  name1 TYPE kna1-name1,
+  END OF ty_kna1.
+
+DATA: it_vbak TYPE STANDARD TABLE OF ty_vbak,
+      wa_vbak LIKE LINE OF it_vbak,
+      it_kna1 TYPE STANDARD TABLE OF ty_kna1,
+      wa_kna1 LIKE LINE OF it_kna1.
+
+
+SELECT-OPTIONS s_num FOR wa_vbak-vbeln.
+
+SELECT vbeln audat netwr kunnr FROM vbak INTO TABLE it_vbak WHERE vbeln IN s_num .
+SELECT kunnr name1 FROM kna1 INTO TABLE it_kna1 FOR ALL ENTRIES IN it_vbak WHERE kunnr EQ it_vbak-kunnr.
+
+
+WRITE: /20 'Document Number',
+        40 'Doc Date',
+        60 'Net Val',
+        90 'sold to party'.
+
+  LOOP AT it_vbak INTO wa_vbak.
+    READ TABLE it_kna1 INTO wa_kna1 WITH KEY kunnr = wa_vbak-kunnr.
+    WRITE :/20 wa_vbak-vbeln,
+           40 wa_vbak-audat,
+           60 wa_vbak-netwr,
+          90  wa_kna1-name1.
+  ENDLOOP.

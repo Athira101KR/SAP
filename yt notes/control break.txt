@@ -1,0 +1,25 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_AR_2
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zabap_ar_2.
+
+PARAMETERS: p_color.
+
+*IF p_color = 'R'.
+*  WRITE 'Color is red'.
+*ELSEIF p_color = 'B'.
+*  WRITE 'color is blue'.
+*ELSE.
+*  WRITE 'Color is unknown'.
+*ENDIF.
+
+CASE p_color.
+  WHEN 'R'.
+    WRITE 'color is red'.
+  WHEN 'Y'.
+    WRITE 'color is yellow'.
+  WHEN OTHERS.
+    WRITE 'color unknown'.
+ENDCASE.

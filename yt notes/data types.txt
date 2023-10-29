@@ -1,0 +1,84 @@
+DATA OBJECTS:
+-- ----------------------------------
+	single variable   ---> data object
+	multiple data objects --->	Structure
+
+data types--1. System defined(pre defined)
+		i)elementary
+			*character(C)
+		length
+		Data a(5) type c. -->By defualt type is C.
+		size: 1. 
+			*numeric text(N)
+		length
+			*integer(I)
+		length 9.
+		Postive and negative numbers. put - at the last for 
+ negative numbers.
+			*Packed(P)
+		round-off. we can fix the nuumber of deciamals.
+		decimals.
+		Data : a type p decimal 2.  --> if a= 23.6779 accepts only
+23.67
+			*Float(F)
+		decimals.
+		we cannot fix the number of decimals.
+			*Date(D)
+		Length will be 8. 
+		yyyymmdd
+			*Time(T)
+		hhmmss.
+			*Hexadecimal(X)
+		
+		ii)structured
+	2. user defined
+		i)elemntary
+			ex: 
+			Types: name(5).
+			Data: name1 type name,
+			         name2 type name,
+			         name3 like name2.
+		cannot store more than single value. will be rewritten
+		ii)structured
+			TYPES only store the properties.
+			work areas--> append to internal tbl.
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZABAP_AR_1
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zabap_ar_1.
+
+
+TYPES: BEGIN OF st_mat,
+         matno(10) TYPE c,
+         matna(20) TYPE c,
+         dom       TYPE d,
+         cost(10)  TYPE c,
+       END OF st_mat.
+
+DATA: it_mat TYPE STANDARD TABLE OF st_mat,
+      wa_mat TYPE st_mat.
+
+wa_mat-matno = '101'.
+wa_mat-matna = 'musci sytem'.
+wa_mat-dom = '10102020'.
+wa_mat-cost = '2000'.
+APPEND wa_mat TO it_mat.
+
+wa_mat-matno = '102'.
+wa_mat-matna = 'tyre'.
+wa_mat-dom = '11122020'.
+wa_mat-cost = '1000'.
+APPEND wa_mat TO it_mat.
+
+LOOP AT it_mat INTO wa_mat.
+  WRITE: / wa_mat-matno,
+  wa_mat-matna,
+  wa_mat-dom,
+  wa_mat-cost.
+ENDLOOP.
