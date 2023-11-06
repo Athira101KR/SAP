@@ -1,0 +1,51 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_AR_9
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zabap_ar_9.
+
+DATA a TYPE i.
+a = 10.
+DATA b TYPE i.
+b = 100.
+DATA c TYPE i.
+c = 200.
+
+*WRITE:/ 'before', a.
+*PERFORM pass_by_ref USING a.
+*WRITE:/ 'after', a.
+*
+*FORM pass_by_ref USING f_a.
+*  f_a = f_a + 10.
+*ENDFORM.
+
+
+*WRITE:/ 'before', a.
+*PERFORM pass_by_val USING a.
+*WRITE:/ 'after', a.
+*
+*FORM pass_by_val USING value(f_a).
+*  f_a = f_a + 10.
+*ENDFORM.
+
+*
+*WRITE:/ 'before', a.
+*PERFORM pass_by_val_res CHANGING a.
+*WRITE:/ 'after', a.
+*
+*FORM pass_by_val_res CHANGING VALUE(f_a).
+*  f_a = f_a + 10.
+*ENDFORM.
+
+
+
+WRITE:/ 'before', a, b, c.
+PERFORM pass_by_val_res using a  CHANGING b c.
+WRITE:/ 'after', a, b, c.
+
+FORM pass_by_val_res USING f_a  CHANGING f_b f_c.
+*  f_a = f_a + 10.
+  f_b = f_b + 10.
+  f_c = f_c + 10.
+ENDFORM.

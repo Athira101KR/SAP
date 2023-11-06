@@ -1,0 +1,29 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_AR_8
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZABAP_AR_8.
+
+TYPES: BEGIN OF ty_zathira,
+  emp_id TYPE ZATHIRA_MAKT-emp_id,
+  name TYPE ZATHIRA_MAKT-name,
+  salary TYPE ZATHIRA_MAKT-salary,
+  dept_id TYPE ZATHIRA_MAKT-dept_id,
+  END OF ty_zathira.
+
+  DATA: st_zathira TYPE  ty_zathira,
+  desc TYPE ZATHIRA_MAKT_DB-dept_desc.
+
+
+
+PARAMETERS eid TYPE ZATHIRA_MAKT-EMP_ID.
+
+SELECT SINGLE emp_id name salary dept_id FROM ZATHIRA_MAKT INTO  st_zathira WHERE emp_id EQ eid.
+  SELECT SINGLE dept_desc FROM ZATHIRA_MAKT_DB INTO desc WHERE dept_id EQ st_zathira-dept_id.
+
+
+    WRITE:/ st_zathira-emp_id,
+    st_zathira-name,
+    st_zathira-salary,
+    desc.
