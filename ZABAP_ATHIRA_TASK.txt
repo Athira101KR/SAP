@@ -1,0 +1,45 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_ATHIRA_TASK
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zabap_athira_task.
+
+PARAMETERS p_werks TYPE marc-werks.
+
+DATA : it_plant TYPE STANDARD TABLE OF zkir_view1,
+       wa_plant LIKE LINE OF it_plant.
+
+DATA : it_plant1 TYPE STANDARD TABLE OF zkir_plant,
+      wa_plant1 LIKE LINE OF it_plant1.
+
+DATA : prev_low TYPE zkir_plant-low,
+      prev_high TYPE zkir_plant-high.
+
+SELECT-OPTIONS s_matnr FOR wa_plant-matnr.
+
+SELECT * FROM zkir_view1 INTO TABLE it_plant WHERE matnr IN s_matnr.
+  SELECT * FROM zkir_plant into table it_plant1.
+
+LOOP AT it_plant INTO wa_plant.
+  clear prev_low.
+  clear prev_high.
+*  IF wa_plant-werks EQ 'JK77'.
+
+  LOOP AT it_plant1 into wa_plant1 where low <= wa_plant-werks and high >= wa_plant-werks.
+    if wa_plant1-sign = 'E'.
+      prev_low = wa_plant1-low.
+      prev_high = wa_plant1-high.
+      format color col off.
+      ELSEIF wa_plant1 = 'I' and ( wa_plant1-low NE prev_low or wa_plant1-high NE prev_high ).
+
+*  IF wa_plant-werks EQ p_werks.
+    FORMAT COLOR COL_POSITIVE.
+    else.
+      format color off.
+  ENDIF.
+  ENDLOOP.
+
+  WRITE : / wa_plant-matnr, 40 wa_plant-werks, 120 wa_plant-name1.
+  FORMAT COLOR OFF.
+ENDLOOP.

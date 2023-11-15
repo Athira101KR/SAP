@@ -1,0 +1,16 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_ATHIRA_DB_VIEWS
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZABAP_ATHIRA_DB_VIEWS.
+
+DATA : it_plant TYPE STANDARD TABLE OF ZKIR_VIEW1,
+wa_plant LIKE LINE OF it_plant.
+
+SELECT-OPTIONS s_matnr FOR wa_plant-matnr.
+SELECT * FROM zkir_view1 INTO TABLE it_plant WHERE matnr  IN s_matnr.
+
+  LOOP AT it_plant INTO wa_plant.
+    WRITE : / wa_plant-matnr, wa_plant-werks, wa_plant-name1.
+    ENDLOOP.

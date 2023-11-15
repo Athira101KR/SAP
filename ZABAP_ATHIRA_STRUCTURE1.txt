@@ -1,0 +1,30 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_ATHIRA_STRUCTURE1
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZABAP_ATHIRA_STRUCTURE1.
+
+TYPES : BEGIN OF ty_makt,
+  emp_id TYPE ZATHIRA_MAKT-emp_id,
+  name TYPE ZATHIRA_MAKT-name,
+  salary TYPE ZATHIRA_MAKT-salary,
+  dept_id TYPE ZATHIRA_MAKT-dept_id,
+  END OF ty_makt.
+
+  DATA : st_makt TYPE ty_makt.
+
+  PARAMETERS p_empid TYPE ZATHIRA_MAKT-emp_id.
+
+  SELECT SINGLE emp_id name salary dept_id FROM ZATHIRA_MAKT INTO st_makt WHERE emp_id EQ p_empid.
+
+  DATA v_desc TYPE ZATHIRA_MAKT_DB-dept_desc.
+
+  SELECT SINGLE dept_desc FROM ZATHIRA_MAKT_DB INTO v_desc WHERE dept_id EQ st_makt-dept_id.
+
+
+    WRITE : st_makt-emp_id,
+    st_makt-name,
+    st_makt-salary,
+    st_makt-dept_id,
+   v_desc.

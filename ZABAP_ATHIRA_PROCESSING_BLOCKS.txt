@@ -1,0 +1,100 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_ATHIRA_PROCESSING_BLOCKS
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zabap_athira_processing_blocks.
+
+*DATA v_maktx TYPE maktx.
+*PARAMETERS p_matnr TYPE matnr DEFAULT 'MN100'.
+*PARAMETERS p_date TYPE sy-datum.
+*PARAMETERS p_set1 AS CHECKBOX.
+*
+*START-OF-SELECTION.
+*
+*  DATA v_name TYPE c LENGTH 10.
+*  SELECT SINGLE maktx FROM makt INTO v_maktx WHERE matnr EQ p_matnr.
+*  PERFORM show_output.
+*
+*AT LINE-SELECTION.
+*  WRITE 'secondory list'.
+*  CALL SELECTION-SCREEN 1000.
+*FORM show_output.
+*  v_name = 'Athira'.
+*  WRITE v_name.
+*ENDFORM.
+*
+*FORM display.
+*  v_name = 'Athira'.
+*ENDFORM.
+*
+*AT SELECTION-SCREEN OUTPUT.
+*  p_date = sy-datum.
+*  LOOP AT SCREEN.
+*    IF screen-name = 'P_SETL'.
+*      screen-input = 0.
+*      MODIFY SCREEN.
+*    ENDIF.
+*  ENDLOOP.
+
+*
+*DATA v_maktx type maktx.
+*PARAMETERS : p_matnr TYPE matnr DEFAULT 'MN100',
+*            p_date TYPE sy-datum,
+*            p_set1 as CHECKBOX.
+*
+*START-OF-SELECTION.
+*
+*DATA v_name TYPE c LENGTH 10.
+* select SINGLE maktx FROM makt into v_maktx WHERE matnr eq p_matnr.
+*   PERFORM show_output.
+*
+*   AT LINE-SELECTION.
+*     WRITE 'secondary list'.
+*     call SELECTION-SCREEN 1000.
+*   form show_output.
+*
+*     v_name = 'Bhagyalakshmi'.
+*     WRITE v_name.
+*     ENDFORM.
+*     FORM display.
+*       v_name = 'bHAGYALAKSHMI'.
+*       ENDFORM.
+*     At SELECTION-SCREEN OUTPUT.
+*       p_date = sy-datum.
+*       LOOP AT SCREEN.
+*         if screen-name = 'P_SETL'.
+*           screen-input = 0.
+*           MODIFY SCREEN.
+*           ENDIF.
+*           ENDLOOP.
+
+
+PARAMETERS p_matnr TYPE matnr.
+
+LOAD-OF-PROGRAM.
+WRITE : / ' load of program'.
+
+INITIALIZATION.
+WRITE : / ' Initialization'.
+
+START-OF-SELECTION.
+WRITE : / ' start of selection'.
+
+END-OF-SELECTION.
+WRITE : / ' end of selection'.
+
+AT SELECTION-SCREEN.
+ WRITE : / ' at selection screen'.
+
+ AT SELECTION-SCREEN OUTPUT.
+   WRITE : / '  selection screen output'.
+
+   TOP-OF-PAGE.
+   WRITE : / ' top of page'.
+
+   END-OF-PAGE.
+   WRITE : / ' end of page'.
+
+   AT LINE-SELECTION.
+  WRITE : / ' at line selection'.

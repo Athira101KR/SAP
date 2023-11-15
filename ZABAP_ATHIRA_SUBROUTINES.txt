@@ -1,0 +1,44 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_ATHIRA_SUBROUTINES
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZABAP_ATHIRA_SUBROUTINES.
+
+DATA : v_matnr type makt-matnr,
+      v_spras type makt-spras,
+      v_maktx type makt-maktx.
+
+v_matnr = '000000000000000056'.
+v_spras = 'E'.
+
+PERFORM get_data USING v_matnr v_spras CHANGING v_maktx.
+write v_maktx.
+*&---------------------------------------------------------------------*
+*& Form get_data
+*&---------------------------------------------------------------------*
+*& text
+*&---------------------------------------------------------------------*
+*&      --> V_MATNR
+*&      --> V_SPRAS
+*&      <-- V_MAKTX
+*&---------------------------------------------------------------------*
+*FORM get_data  USING  p_v_matnr TYPE makt-matnr                                  "CALLL BY REFERENCE"
+*                       p_v_spras TYPE  makt-spras
+*               p_v_maktx TYPE makt-maktx.
+
+**  *&---------------------------------------------------------------------*
+*FORM get_data  USING VALUE(p_v_matnr) TYPE makt-matnr                           "CALL BY VALUE"
+*                     VALUE(p_v_spras) TYPE  makt-spras
+*              CHANGING p_v_maktx TYPE makt-maktx.
+
+
+*  *&---------------------------------------------------------------------*
+FORM get_data  USING VALUE(p_v_matnr) TYPE makt-matnr                     "VALUE AND RESULT"
+                     VALUE(p_v_spras) TYPE  makt-spras
+            CHANGING  VALUE(p_v_maktx) TYPE makt-maktx.
+
+  SELECT SINGLE maktx FROM makt into p_v_maktx where matnr = p_v_matnr and spras = p_v_spras.
+*    p_v_spras = 'D'.
+
+ENDFORM.

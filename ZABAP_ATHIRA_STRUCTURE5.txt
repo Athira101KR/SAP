@@ -1,0 +1,87 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_ATHIRA_STRUCTURE5
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zabap_athira_structure5.
+
+TYPES :BEGIN OF ty_vbak,
+         vbeln TYPE vbak-vbeln,
+         audat TYPE vbak-audat,
+         netwr TYPE vbak-netwr,
+         kunnr TYPE vbak-kunnr,
+       END OF ty_vbak.
+
+TYPES :BEGIN OF ty_vbap,
+         posnr  TYPE vbap-posnr,
+         matnr  TYPE vbap-matnr,
+         arktx  TYPE vbap-arktx,
+         kwmeng TYPE vbap-kwmeng,
+         zieme  TYPE vbap-zieme,
+         netwr  TYPE vbap-netwr,
+       END OF ty_vbap.
+
+*TYPES : BEGIN OF ty_kna1,
+*          kunnr TYPE kna1-kunnr,
+*          name1 TYPE kna1-kunnr,
+*        END OF ty_kna1.
+*
+TYPES : BEGIN OF ty_t006a,
+          msehi TYPE t006a-msehi,
+          msehl TYPE t006a-msehl,
+*          mseht TYPE t006a-mseht,
+        END OF ty_t006a.
+
+
+*DATA  : It_vbak  TYPE ty_vbak,
+*        st_vbap  TYPE ty_vbap,
+*        v_name1  TYPE kna1-name1,
+*        v_mseht TYPE t006a-mseht.
+
+DATA : it_vbak  TYPE TABLE OF ty_vbak,
+       wa_vbak  LIKE LINE OF it_vbak,
+       it_vbap  TYPE TABLE OF ty_vbap,
+       wa_vbap  LIKE LINE OF it_vbap,
+       it_t006a TYPE TABLE OF ty_t006a,
+       wa_t006a LIKE LINE OF it_t006a.
+DATA v_name1 TYPE kna1-name1.
+DATA v_msehl TYPE t006a-msehl.
+
+
+PARAMETERS : p_vbeln TYPE vbak-vbeln.
+**             p_ddate TYPE vbak-audat,
+**             p_netval TYPE vbak-netwr,
+**             p_stp TYPE vbak-kunnr.
+
+SELECT SINGLE vbeln audat netwr kunnr FROM vbak INTO wa_vbak WHERE vbeln EQ p_vbeln.
+
+SELECT SINGLE name1 FROM kna1 INTO v_name1 WHERE kunnr EQ wa_vbak-kunnr.
+
+
+WRITE : / 'Document Number: ' , wa_vbak-vbeln, : /
+        'Document Date:' , wa_vbak-audat, : /
+        'Net Value:' , wa_vbak-netwr , : /
+        'Sold To value:' , wa_vbak-kunnr.
+
+
+WRITE : / 'Item',
+        20 'Material',
+        35 'Item Description',
+        60 'order qty',
+        80 'UOM',
+        100 'Netvalue'.
+
+SELECT posnr matnr arktx kwmeng zieme netwr FROM vbap INTO TABLE it_vbap WHERE vbeln EQ p_vbeln.
+*  SELECT SINGLE mseht FROM t006a INTO v_mseht WHERE msehi EQ st_vbap-zieme.
+*  SELECT SINGLE mseht  t006a INTO v_mseht WHERE spras EQ sy-langu AND msehi EQ st_vbap-zieme.
+SELECT msehi msehl FROM t006a INTO TABLE it_t006a FOR ALL ENTRIES IN it_vbap WHERE spras EQ sy-langu AND msehi EQ it_vbap-zieme.
+LOOP AT it_vbap INTO wa_vbap.
+  READ TABLE it_t006a INTO wa_t006a WITH KEY msehi = wa_vbap-zieme.
+  WRITE : / wa_vbap-posnr,
+            20 wa_vbap-matnr,
+            35  wa_vbap-arktx,
+            50 wa_vbap-kwmeng,
+            80 wa_t006a-msehl,
+            90 wa_vbap-netwr.
+
+ENDLOOP.

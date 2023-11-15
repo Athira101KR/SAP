@@ -1,0 +1,57 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_ATHIRA_MESSAGE
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZABAP_ATHIRA_MESSAGE MESSAGE-ID ZATHIRA_MESSAGE.
+*REPORT zabap_athira_message .
+
+DATA : it_makt TYPE STANDARD TABLE OF makt,
+       wa_makt LIKE LINE OF it_makt.
+
+PARAMETERS p_matnr TYPE makt-matnr.
+
+*---message class
+*
+*AT SELECTION-SCREEN.
+*SELECT * FROM makt into TABLE it_makt WHERE matnr EQ p_matnr.
+*IF sy-subrc IS NOT INITIAL.
+*MESSAGE e000.
+*ENDIF.
+*START-OF-SELECTION.
+*LOOP AT it_makt into wa_makt.
+*WRITE :/ wa_makt-matnr,wa_makt-spras, wa_makt-maktx.
+*ENDLOOP.
+
+*----
+
+**DATA: p_matnr_message TYPE c LENGTH 18.
+*AT SELECTION-SCREEN.
+*SELECT * FROM makt INTO TABLE it_makt WHERE matnr EQ p_matnr.
+*IF sy-subrc IS NOT INITIAL.
+**MESSAGE e000(ZATHIRA_MESSAGE).
+**   CONCATENATE p_matnr ' is invalid' INTO p_matnr_message SEPARATED BY space.
+**  MESSAGE p_matnr_message TYPE 'E'.
+*          MESSAGE |{ p_matnr } is not a valid input| TYPE 'E'.
+**  MESSAGE  p_matnr, ' is invalid' TYPE 'E'.
+**  MESSAGE TEXT-001 TYPE 'E'.
+*ENDIF.
+*START-OF-SELECTION.
+*LOOP AT it_makt INTO wa_makt.
+*  WRITE :/ wa_makt-matnr,wa_makt-spras, wa_makt-maktx.
+*ENDLOOP.
+*
+*------------
+
+
+AT SELECTION-SCREEN.
+SELECT * FROM makt INTO TABLE it_makt WHERE matnr EQ p_matnr.
+IF sy-subrc IS NOT INITIAL.
+*  MESSAGE |{ p_matnr } is not a valid input| TYPE 'E'.
+  MESSAGE e000 with p_matnr.
+
+  ENDIF.
+START-OF-SELECTION.
+LOOP AT it_makt INTO wa_makt.
+  WRITE :/ wa_makt-matnr,wa_makt-spras, wa_makt-maktx.
+ENDLOOP.

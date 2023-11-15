@@ -1,0 +1,58 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_ATHIRA_INTERNALTABLE3
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZABAP_ATHIRA_INTERNALTABLE3.
+
+*PARAMETERS : p_iamt TYPE p DECIMALS 2,
+*p_pper TYPE p DECIMALS 2,
+*p_days TYPE i,
+*p_che AS CHECKBOX.
+*
+*DATA : fin_amt TYPE p DECIMALS 2,
+*      profit TYPE p DECIMALS 2.
+*fin_amt = p_iamt.
+*
+*IF p_che EQ 'X'.
+*
+*  DO p_days TIMES.
+*    profit = fin_amt + p_pper / 100.
+*    fin_amt = fin_amt + profit.
+*    ENDDO.
+*
+*    ELSE.
+*      profit = p_iamt * ( p_pper / 100 ) * ( p_days / 365 ).
+*      fin_amt = p_iamt + profit.
+*      ENDIF.
+*
+*      WRITE : 'Initial amounr:',p_iamt,/
+*      'Total Days:',p_days,/
+*      'Total Amount:',fin_amt.
+
+PARAMETERS p_amount TYPE p.
+PARAMETERS p_profit TYPE P.
+PARAMETERS p_days TYPE i.
+PARAMETERS p_check AS CHECKBOX.
+
+
+
+DATA simple_interest TYPE P.
+DATA compound_interest TYPE p.
+
+
+
+if p_check EQ 'X'.
+  simple_interest = ( p_amount * p_profit * p_days ) / 100.
+  WRITE : /'initial amount',p_amount,
+        /'total days',p_days,
+        /'simple interest:',simple_interest.
+ELSE.
+  compound_interest = p_amount * ( ( 1 + ( p_profit / 100 ) ) **  ( p_days - 1 ) )  .
+
+
+
+  WRITE : /'initial amount',p_amount,
+        /'total days',p_days,
+        /'compound interest:',compound_interest.
+ENDIF.

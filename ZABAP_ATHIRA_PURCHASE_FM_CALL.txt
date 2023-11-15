@@ -1,0 +1,178 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_ATHIRA_PURCHASE_FM_CALL
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZABAP_ATHIRA_PURCHASE_FM_CALL.
+
+DATA: it_header TYPE  ZATHIRA_T_HEADER,
+       wa_header LIKE LINE OF it_header,
+       it_item TYPE ZATHIRA_T_ITEM,
+       wa_item LIKE LINE OF it_item.
+
+
+SELECT-OPTIONS s_num FOR wa_header-vbeln.
+
+START-OF-SELECTION.
+
+CALL FUNCTION 'ZATHIRA_FM_HEADER'
+  EXPORTING
+    im_vbeln        = s_num[]
+ IMPORTING
+   EX_HEADER       = it_header
+          .
+END-OF-SELECTION.
+
+CALL FUNCTION 'ZATHIRA_FM_HEADER_DETAILS'
+  EXPORTING
+    im_header_details       = it_header
+          .
+
+AT LINE-SELECTION.
+  DATA : fnam(20),fval(50).
+  DATA v_vbeln TYPE vbap-vbeln.
+  GET CURSOR FIELD fnam VALUE fval.
+*  fnam = wa_vbak-vbeln.
+  CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+    EXPORTING
+      input  = fval
+    IMPORTING
+      output = v_vbeln.
+
+clear it_item.
+
+CALL FUNCTION 'ZATHIRA_FM_ITEMS'
+  EXPORTING
+    im_v_vbeln       = v_vbeln
+ IMPORTING
+   EX_ITEM          = it_item
+          .
+CALL FUNCTION 'ZATHIRA_FM_ITEMS_DETAILS'
+  EXPORTING
+    im_item_details       = it_item
+          .
+
+FUNCTION ZATHIRA_FM_HEADER.
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     REFERENCE(IM_VBELN) TYPE  ZATHIRA_T_RANGE
+*"  EXPORTING
+*"     REFERENCE(EX_HEADER) TYPE  ZATHIRA_T_HEADER
+*"----------------------------------------------------------------------
+
+ DATA :
+        it_vbak TYPE table of zathira_s_vbak,
+        wa_vbak LIKE LINE OF it_vbak,
+        it_header TYPE TABLE Of zathira_s_header,
+        wa_header LIkE LINE OF it_header,
+        it_kna1 TYPE TABLE OF zathira_s_kna1,
+        wa_kna1 LIKE LINE OF it_kna1.
+
+ SELECT  vbeln audat netwr kunnr FROM vbak INTO TABLE it_vbak WHERE vbeln IN im_vbeln.
+SELECT  kunnr name1 FROM kna1 INTO TABLE it_kna1 FOR ALL ENTRIES IN it_vbak WHERE kunnr EQ it_vbak-kunnr.
+
+  LOOP AT it_vbak INTO wa_vbak.
+    READ TABLE it_kna1 INTO wa_kna1 WITH KEY kunnr = wa_vbak-kunnr.
+    MOVE-CORRESPONDING wa_vbak TO wa_header.
+    MOVE-CORRESPONDING wa_kna1 TO wa_header.
+    APPEND wa_header TO ex_header.
+
+    clear wa_header.
+
+  ENDLOOP.
+
+
+
+ENDFUNCTION.
+
+FUNCTION ZATHIRA_FM_HEADER_DETAILS.
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     REFERENCE(IM_HEADER_DETAILS) TYPE  ZATHIRA_T_HEADER
+*"----------------------------------------------------------------------
+
+DATA: wa_header LIKE LINE OF IM_HEADER_DETAILS.
+
+LOOP AT IM_HEADER_DETAILS INTO wa_header.
+
+    AT FIRST.
+      WRITE :/20 'Document Number',
+       40 'Doc Date',
+       70 'Net Val',
+       90 'Sold To Party'.
+    ENDAT.
+
+    WRITE : /20 wa_header-vbeln,
+            40 wa_header-audat,
+            60 wa_header-netwr,
+           90  wa_header-name1.
+  ENDLOOP.
+
+
+
+ENDFUNCTION.
+
+FUNCTION ZATHIRA_FM_ITEMS.
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     REFERENCE(IM_V_VBELN) TYPE  VBAK-VBELN
+*"  EXPORTING
+*"     REFERENCE(EX_ITEM) TYPE  ZATHIRA_T_ITEM
+*"----------------------------------------------------------------------
+
+DATA : it_vbap TYPE table of zathira_s_vbap,
+        wa_vbap LIKE LINE OF it_vbap,
+        it_t006a TYPE TABLE OF zathira_s_t006a,
+        wa_t006a like line of it_t006a,
+        it_item TYPE TABLE OF zathira_s_item,
+        wa_item LIKE LINE OF it_item.
+
+ SELECT  vbeln posnr pstyv arktx kwmeng zieme netwr FROM vbap INTO TABLE it_vbap WHERE vbeln EQ im_v_vbeln.
+SELECT msehi msehl FROM t006a INTO TABLE it_t006a FOR ALL ENTRIES IN it_vbap where spras Eq sy-langu AND msehi EQ it_vbap-zieme.
+
+  LOOP AT it_vbap into wa_vbap.
+    READ TABLE it_t006a INTO wa_t006a with key msehi = wa_vbap-zieme.
+
+    MOVE-CORRESPONDING wa_vbap to wa_item.
+    MOVE-CORRESPONDING wa_t006a to wa_item.
+    append wa_item to ex_item.
+
+    ENDLOOP.
+
+
+
+
+ENDFUNCTION.
+
+FUNCTION ZATHIRA_FM_ITEMS_DETAILS.
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     REFERENCE(IM_ITEM_DETAILS) TYPE  ZATHIRA_T_ITEM
+*"----------------------------------------------------------------------
+DATA: wa_item LIKE LINE OF IM_ITEM_DETAILS.
+
+LOOP AT IM_ITEM_DETAILS INTO wa_item.
+    AT FIRST.
+      WRITE :/ 'Item',
+           20 'Material',
+           35 'ItemDesc',
+    60 'Order Qty' ,
+    80 'UoM',
+    100'NetVal'.
+    ENDAT.
+    WRITE : / wa_item-posnr,
+             20 wa_item-pstyv,
+             35  wa_item-arktx,
+             50 wa_item-kwmeng,
+             80 wa_item-msehl,
+             90 wa_item-netwr.
+
+  ENDLOOP.
+
+
+
+ENDFUNCTION.

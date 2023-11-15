@@ -1,0 +1,24 @@
+*s*&---------------------------------------------------------------------*
+*& Report ZABAP_ATHIRA_STRUCTURE3
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZABAP_ATHIRA_STRUCTURE3.
+
+TYPES : BEGIN OF ty_MARC,
+  matnr TYPE marc-matnr,
+  werks TYPE marc-werks,
+  END OF ty_MARC.
+
+  DATA : st_marc TYPE ty_marc.
+  DATA : v_name1 TYPE T001W-name1.
+
+  PARAMETERS p_matnr TYPE marc-matnr.
+
+  SELECT matnr WERKS FROM marc INTO st_marc WHERE matnr EQ p_matnr.
+    SELECT SINGLE name1 FROM T001W INTO v_name1 WHERE werks EQ st_marc-werks.
+
+    WRITE : / st_marc-matnr,
+      st_marc-werks,
+    v_name1.
+    ENDSELECT.

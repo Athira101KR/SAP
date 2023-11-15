@@ -1,0 +1,21 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_ATHIRA_STRUCTURE2
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZABAP_ATHIRA_STRUCTURE2.
+
+TYPES : BEGIN OF ty_mkt,
+*  emp_id TYPE ZATHIRA_MAKT-emp_id,
+  name TYPE ZATHIRA_MAKT-name,
+  END OF ty_mkt.
+
+  DATA : st_makt TYPE ty_mkt.
+
+  PARAMETERS p_depid TYPE ZATHIRA_MAKT-dept_id.
+
+  SELECT name FROM ZATHIRA_MAKT INTO st_makt WHERE dept_id EQ p_depid.
+
+  WRITE : st_makt-name.
+
+  ENDSELECT.

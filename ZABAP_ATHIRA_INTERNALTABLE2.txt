@@ -1,0 +1,30 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_ATHIRA_INTERNALTABLE2
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZABAP_ATHIRA_INTERNALTABLE2.
+
+TYPES : BEGIN OF ty_MARC,
+  matnr TYPE marc-matnr,
+  werks TYPE marc-werks,
+  END OF ty_MARC.
+
+  DATA : it_marc TYPE TABLE OF ty_marc,
+        wa_marc LIKE LINE OF it_marc,
+        it_t001w TYPE TABLE OF t001w-name1,
+        wa_t001w LIKE LINE OF it_t001w.
+
+*  DATA : v_name1 TYPE T001W-name1.
+
+  PARAMETERS p_mat_id TYPE marc-matnr.
+
+  SELECT matnr WERKS FROM marc INTO TABLE it_marc WHERE matnr EQ p_mat_id.
+
+    LOOP AT it_marc INTO wa_marc.
+    SELECT SINGLE name1 FROM T001W INTO wa_t001w WHERE werks EQ wa_marc-werks.
+
+    WRITE : / wa_marc-matnr,
+      wa_marc-werks,
+    wa_t001w.
+    ENDLOOP.

@@ -1,0 +1,45 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_ATHIRA_TYPES
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZABAP_ATHIRA_TYPES.
+
+TYPES : BEGIN OF ty_makt,
+  matnr TYPE makt-matnr,
+  spras TYPE makt-spras,
+  maktx TYPE makt-maktx,
+  END OF ty_makt.
+
+*  DATA : it_makt TYPE STANDARD TABLE OF  ty_makt ,
+*DATA : it_makt TYPE SORTED TABLE OF  ty_makt with unique  key matnr,
+    DATA : it_makt TYPE HASHED TABLE OF  ty_makt with unique  key matnr,
+        wa_makt LIKE LINE OF it_makt.
+
+  wa_makt-matnr = '100'.
+  wa_makt-spras = 'E'.
+  wa_makt-maktx = 'Book'.
+*  APPEND wa_makt TO  it_makt.
+   INSERT wa_makt INTO TABLE it_makt.
+
+  wa_makt-matnr = '300'.
+  wa_makt-spras = 'E'.
+  wa_makt-maktx = 'Book'.
+*   APPEND wa_makt TO  it_makt.
+  INSERT wa_makt INTO TABLE it_makt.
+
+  wa_makt-matnr = '200'.
+  wa_makt-spras = 'E'.
+  wa_makt-maktx = 'Book'.
+*   APPEND wa_makt TO  it_makt.
+  INSERT wa_makt INTO TABLE it_makt.
+
+
+*   sort it_makt by matnr spras.
+*   READ TABLE it_makt INTO wa_makt with key matnr = '200' spras = 'E' BINARY SEARCH.
+*READ TABLE it_makt INTO wa_makt with key matnr = '200' spras = 'E'.
+
+LOOP AT it_makt into wa_makt.
+
+   write wa_makt.
+  endLOOP.

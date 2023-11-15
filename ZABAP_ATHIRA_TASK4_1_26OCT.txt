@@ -1,0 +1,134 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_ATHIRA_TASK4_1_26OCT
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zabap_athira_task4_1_26oct.
+
+TYPES: BEGIN  OF ty_vbap,
+         vbeln  TYPE vbap-vbeln,
+         posnr  TYPE vbap-posnr,
+         pstyv  TYPE vbap-pstyv,
+         arktx  TYPE vbap-arktx,
+         kwmeng TYPE vbap-kwmeng,
+         zieme  TYPE vbap-zieme,
+         netwr  TYPE vbap-netwr,
+       END  OF ty_vbap.
+TYPES :BEGIN OF ty_vbak,
+         vbeln TYPE vbak-vbeln,
+         audat TYPE vbak-audat,
+         netwr TYPE vbak-netwr,
+         kunnr TYPE vbak-kunnr,
+       END OF ty_vbak.
+TYPES : BEGIN OF ty_t006a,
+          msehi TYPE t006a-msehi,
+          msehl TYPE t006a-msehl,
+        END OF ty_t006a.
+TYPES : BEGIN OF ty_kna1 ,
+          kunnr TYPE kna1-kunnr,
+          name1 TYPE kna1-name1,
+        END OF ty_kna1.
+
+        TYPES : BEGIN OF ty_header,
+      vbeln TYPE vbak-vbeln,
+       audat TYPE vbak-audat,
+       netwr TYPE vbak-netwr,
+*       kunnr type vbak-kunnr,
+      name1 type kna1-name1,
+    END OF ty_header.
+
+    TYPES : BEGIN OF ty_item,
+      vbeln type vbap-vbeln,
+      posnr TYPE vbap-posnr,
+      pstyv TYPE vbap-pstyv,
+      arktx TYPE vbap-arktx,
+      kwmeng TYPE vbap-kwmeng,
+      netwr TYPE vbap-netwr,
+      msehl type t006a-msehl,
+  END OF ty_item.
+
+
+DATA : it_vbap   TYPE TABLE OF ty_vbap,
+       wa_vbap   LIKE LINE OF it_vbap,
+       it_vbak   TYPE TABLE OF ty_vbak,
+       wa_vbak   LIKE LINE OF it_vbak,
+       it_t006a  TYPE TABLE OF ty_t006a,
+       wa_t006a  LIKE LINE OF it_t006a,
+       it_kna1   TYPE TABLE OF ty_kna1,
+       wa_kna1   LIKE LINE OF it_kna1,
+       it_header TYPE table of ty_header,
+       wa_header LIKE LINE OF it_header,
+       it_item TYPE TABLE OF ty_item,
+       wa_item LIKE LINE OF it_item,
+
+       prevbeln  TYPE vbap-vbeln,
+       sum_order TYPE vbap-kwmeng,
+       sum_net   TYPE   vbap-netwr,
+       c_vbeln   TYPE vbak-vbeln.
+
+*TYPES : ty_it_vbak  TYPE STANDARD TABLE OF ty_vbak,
+*        ty_it_kna1  TYPE STANDARD TABLE OF ty_kna1,
+*        ty_it_vbap  TYPE STANDARD TABLE OF ty_vbap,
+*        ty_it_t006a TYPE STANDARD TABLE OF ty_t006a.
+
+
+
+SELECT-OPTIONS s_num FOR wa_vbak-vbeln.
+
+START-OF-SELECTION.
+
+*  PERFORM header IN PROGRAM zabap_athira_task4_2_26oct USING s_num[] CHANGING it_vbak it_kna1.
+   PERFORM header IN PROGRAM zabap_athira_task4_2_26oct USING s_num[] CHANGING it_header.
+
+END-OF-SELECTION.
+*  LOOP AT it_vbak INTO wa_vbak.
+*    READ TABLE it_kna1 INTO wa_kna1 WITH KEY kunnr = wa_vbak-kunnr.
+LOOP AT it_header INTO wa_header.
+
+    AT FIRST.
+      WRITE :/20 'Document Number',
+       40 'Doc Date',
+       70 'Net Val',
+       90 'Sold To Party'.
+    ENDAT.
+
+    WRITE : /20 wa_header-vbeln,
+            40 wa_header-audat,
+            60 wa_header-netwr,
+           90  wa_header-name1.
+  ENDLOOP.
+
+AT LINE-SELECTION.
+  DATA : fnam(20),fval(50).
+  DATA v_vbeln TYPE vbap-vbeln.
+  GET CURSOR FIELD fnam VALUE fval.
+  fnam = wa_vbak-vbeln.
+  CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+    EXPORTING
+      input  = fval
+    IMPORTING
+      output = v_vbeln.
+
+clear it_item.
+*  PERFORM items IN PROGRAM zabap_athira_task4_2_26oct USING v_vbeln CHANGING it_vbap it_t006a.
+PERFORM items IN PROGRAM zabap_athira_task4_2_26oct USING v_vbeln CHANGING it_item.
+
+*  LOOP AT it_vbap INTO wa_vbap.
+LOOP AT it_item INTO wa_item.
+*    READ TABLE it_t006a INTO wa_t006a WITH KEY msehi = wa_vbap-zieme.
+    AT FIRST.
+      WRITE :/ 'Item',
+           20 'Material',
+           35 'ItemDesc',
+    60 'Order Qty' ,
+    80 'UoM',
+    100'NetVal'.
+    ENDAT.
+    WRITE : / wa_item-posnr,
+             20 wa_item-pstyv,
+             35  wa_item-arktx,
+             50 wa_item-kwmeng,
+             80 wa_item-msehl,
+             90 wa_item-netwr.
+
+  ENDLOOP.

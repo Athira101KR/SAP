@@ -1,0 +1,74 @@
+*&---------------------------------------------------------------------*
+*& Report ZABAP_ATHIRA_STRUCTURE4
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zabap_athira_structure4.
+
+TYPES :BEGIN OF ty_vbak,
+         vbeln TYPE vbak-vbeln,
+         audat TYPE vbak-audat,
+         netwr TYPE vbak-netwr,
+         kunnr TYPE vbak-kunnr,
+       END OF ty_vbak.
+
+TYPES :BEGIN OF ty_vbap,
+         posnr  TYPE vbap-posnr,
+         matnr  TYPE vbap-matnr,
+         arktx  TYPE vbap-arktx,
+         kwmeng TYPE vbap-kwmeng,
+         zieme  TYPE vbap-zieme,
+         netwr  TYPE vbap-netwr,
+       END OF ty_vbap.
+
+*TYPES : BEGIN OF ty_kna1,
+*          kunnr TYPE kna1-kunnr,
+*          name1 TYPE kna1-kunnr,
+*        END OF ty_kna1.
+*
+*TYPES : BEGIN OF ty_t006a,
+*          msehi TYPE t006a-msehi,
+*          msehl TYPE t006a-msehl,
+**          mseht TYPE t006a-mseht,
+*        END OF ty_t006a.
+
+
+DATA  : st_vbak  TYPE ty_vbak,
+        st_vbap  TYPE ty_vbap,
+        v_name1  TYPE kna1-name1,
+        v_mseht TYPE t006a-mseht.
+
+
+PARAMETERS : p_dnum TYPE vbak-vbeln.
+*             p_ddate TYPE vbak-audat,
+*             p_netval TYPE vbak-netwr,
+*             p_stp TYPE vbak-kunnr.
+
+SELECT SINGLE vbeln audat netwr kunnr FROM vbak INTO st_vbak WHERE vbeln EQ p_dnum.
+
+SELECT SINGLE name1 FROM kna1 INTO v_name1 WHERE kunnr EQ st_vbak-kunnr.
+
+
+WRITE : / 'Document Number: ' , st_vbak-vbeln, : /
+        'Document Date:' , st_vbak-audat, : /
+        'Net Value:' , st_vbak-netwr , : /
+        'Sold To Party:' , v_name1.
+
+
+WRITE : / 'Item',
+        20 'Material',
+        35 'Item Description',
+        60 'order qty',
+        80 'UOM',
+        100 'Netvalue'.
+
+SELECT posnr matnr arktx kwmeng zieme netwr FROM vbap INTO st_vbap WHERE vbeln EQ p_dnum.
+  SELECT SINGLE mseht FROM t006a INTO v_mseht WHERE msehi EQ st_vbap-zieme.
+  WRITE : / st_vbap-posnr,
+            20 st_vbap-matnr,
+            35  st_vbap-arktx,
+            50 st_vbap-kwmeng,
+            80 v_mseht,
+            90 st_vbap-netwr.
+
+ENDSELECT.
